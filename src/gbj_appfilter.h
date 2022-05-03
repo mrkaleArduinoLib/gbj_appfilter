@@ -48,10 +48,13 @@ public:
     valMin - Minimum of a valid range of a data item.
       - Data type: templated
       - Default value: 0
+    difMax - Maximal consecutive change of values for its validity.
+      - Data type: templated
+      - Default value: 0
 
     RETURN: object
   */
-  inline gbj_appfilter(DAT valMax, DAT valMin = 0)
+  inline gbj_appfilter(DAT valMax, DAT valMin = 0, DAT difMax = 0)
   {
     if (valMin > valMax)
     {
@@ -63,11 +66,19 @@ public:
       minimum_ = valMin;
       maximum_ = valMax;
     }
+    setDifference(difMax);
+    init();
+  }
+
+  inline void init()
+  {
+    value_ = change_ = 0;
+    flagInit_ = false;
   }
 
   inline DAT limit(DAT data)
   {
-    value_ = data;
+    setValue(data);
     if (isLow())
     {
       return minimum_;
@@ -81,42 +92,99 @@ public:
   inline DAT limit() { return limit(value_); }
 
   // Setters
-  inline void setMinimum(DAT data) { minimum_ = data; }
-  inline void setMaximum(DAT data) { maximum_ = data; }
-  inline void setValue(DAT data) { value_ = data; }
+  inline void setMinimum(DAT data) { minimum_ = min(maximum_, data); }
+  inline void setMaximum(DAT data) { maximum_ = max(minimum_, data); }
+  inline void setDifference(DAT data)
+  {
+    difference_ = min(maximum_ - minimum_, absVal(data));
+  }
+  inline void setValue(DAT data)
+  {
+    if (flagInit_)
+    {
+      change_ = data - value_;
+    }
+    else
+    {
+      flagInit_ = true;
+    }
+    value_ = data;
+  }
 
   // Getters
   inline DAT getMinimum() { return minimum_; }
   inline DAT getMaximum() { return maximum_; }
+  inline DAT getDifference() { return difference_; }
   inline DAT getValue() { return value_; }
+  inline DAT getChange() { return change_; }
   //
+  inline bool isInit() { return flagInit_; }
   inline bool isLow() { return value_ < minimum_; }
   inline bool isLow(DAT data)
   {
-    value_ = data;
+    setValue(data);
     return isLow();
   }
   inline bool isHigh() { return value_ > maximum_; }
   inline bool isHigh(DAT data)
   {
-    value_ = data;
+    setValue(data);
     return isHigh();
   }
-  inline bool isInvalid() { return isLow() || isHigh(); }
+  inline bool isJump()
+  {
+    return flagInit_ && difference_ > 0 && difference_ < absVal(change_);
+  }
+  inline bool isJump(DAT data)
+  {
+    setValue(data);
+    return isJump();
+  }
+  inline bool isDecr() { return flagInit_ && change_ < 0; }
+  inline bool isDecr(DAT data)
+  {
+    setValue(data);
+    return isDecr();
+  }
+  inline bool isIncr() { return flagInit_ && change_ > 0; }
+  inline bool isIncr(DAT data)
+  {
+    setValue(data);
+    return isIncr();
+  }
+  inline bool isEqual() { return flagInit_ && change_ == 0; }
+  inline bool isEqual(DAT data)
+  {
+    setValue(data);
+    return isEqual();
+  }
+  inline bool isInvalid() { return isLow() || isHigh() || isJump(); }
   inline bool isInvalid(DAT data)
   {
-    value_ = data;
+    setValue(data);
     return isInvalid();
   }
-  inline bool isValid() { return !isInvalid(value_); }
+  inline bool isValid() { return !isInvalid(); }
   inline bool isValid(DAT data)
   {
-    value_ = data;
+    setValue(data);
     return isValid();
   }
 
 private:
-  DAT minimum_, maximum_, value_;
+  DAT minimum_, maximum_, difference_, value_, change_;
+  bool flagInit_;
+  inline DAT absVal(DAT data)
+  {
+    if (data >= 0)
+    {
+      return data;
+    }
+    else
+    {
+      return -1 * data;
+    }
+  }
 };
 
 #endif
