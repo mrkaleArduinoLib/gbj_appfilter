@@ -1,6 +1,6 @@
 {
   "name": "gbj_appfilter",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Library manages filtering of data with various data types.",
   "keywords": "application",
   "repository": {

@@ -18,11 +18,9 @@
 #ifndef GBJ_APPFILTER_H
 #define GBJ_APPFILTER_H
 
+#include <Arduino.h>
 #if defined(__AVR__)
-  #include <Arduino.h>
   #include <inttypes.h>
-#elif defined(ESP8266) || defined(ESP32)
-  #include <Arduino.h>
 #endif
 
 #undef SERIAL_PREFIX
@@ -32,8 +30,6 @@ template<typename DAT = float>
 class gbj_appfilter
 {
 public:
-  const char *VERSION = "GBJ_APPFILTER 1.0.0";
-
   /*
     Constructor
 

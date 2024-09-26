@@ -22,18 +22,10 @@ This is an application library, which is used usually as a project library for p
 <a id="dependency"></a>
 
 ## Dependency
-#### Arduino platform
 * **Arduino.h**: Main include file for the Arduino SDK.
+
+#### Arduino platform
 * **inttypes.h**: Integer type conversions. This header file includes the exact-width integer definitions and extends them with additional facilities provided by the implementation.
-
-#### Espressif ESP8266 platform
-* **Arduino.h**: Main include file for the Arduino platform.
-
-#### Espressif ESP32 platform
-* **Arduino.h**: Main include file for the Arduino platform.
-
-#### Particle platform
-* **Particle.h**: Includes alternative (C++) data type definitions.
 
 
 <a id="tests"></a>
@@ -42,12 +34,6 @@ This is an application library, which is used usually as a project library for p
 The subfolder `tests` in the folder `extras`, i.e., `gbj_appfilter/extras/test`, contains testing file(s) with unit tests of library [gbj_appfilter](#library) executable by [Unity](http://www.throwtheswitch.org/unity) test runner. Each testing file should be placed in an individual test folder of a particular project, usually in the structure `test/<testname>/<testfile>`.
 * **test_filter.cpp**: Test file providing test cases for standard filtering.
 * **test_filter_change_float.cpp**: Test file providing test cases for change management of float values filtering.
-
-
-<a id="constants"></a>
-
-## Constants
-* **VERSION**: Name and semantic version of the library.
 
 
 <a id="interface"></a>
